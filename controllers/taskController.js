@@ -24,7 +24,13 @@ export const getTasks = async (req, res) => {
     const limit = 5;
     const skip = (page - 1) * limit;
 
-    const tasks = await Task.find({ user: req.user._id })
+    const filter = { user: req.user._id };
+
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+
+    const tasks = await Task.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
